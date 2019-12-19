@@ -11,8 +11,10 @@ const I18 = (req: Request, res: Response, next: NextFunction) => {
     objectNotation: true
   });
 
-  if(req.body.variables && req.body.variables.locale){
-    i18n.setLocale(req.body.variables.locale);
+  const locale = req.get('Accept-Language');
+
+  if(locale){
+    i18n.setLocale(locale);
   }
   next();
 }
