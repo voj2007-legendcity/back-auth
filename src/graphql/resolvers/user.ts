@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import bcrypt from 'bcryptjs';
 import i18n  from 'i18n';
 // errors
@@ -109,7 +110,7 @@ export default {
     }
   },
 
-  readUser: async ({ input }: InputID): Promise<IUser> => {
+  readUser: async ({ input }: InputID, req: Request): Promise<IUser> => {
     try{
       if(!readUser.isValid(input)) {
         const errors = readUser.getErrors();

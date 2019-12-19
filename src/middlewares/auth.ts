@@ -1,27 +1,29 @@
 import { Response, Request, NextFunction } from "express";
 import jwt from 'jsonwebtoken';
 
+export interface IDecodeToken {
+  userId: string,
+  email: string,
+  iat: number,
+  exp: number
+}
+
 const auth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.get('Authorization');
-  console.log(authHeader);
-  // if (!authHeader) {
-  //   req.isAuth = false;
-  //   return next();
-  // }
-  // const token = authHeader.split(' ')[1];
-  // let decodedToken;
-  // try {
-  //   decodedToken = jwt.verify(token, 'somesupersecretsecret');
-  // } catch (err) {
-  //   req.isAuth = false;
-  //   return next();
-  // }
-  // if (!decodedToken) {
-  //   req.isAuth = false;
-  //   return next();
-  // }
-  // req.userId = decodedToken.userId;
-  // req.isAuth = true;
+  
+  if (!authHeader) {
+    (req as any).isAuth = false;
+    return next();
+  }
+  const token = authHeader.split(' ')[1];
+  const decodedToken: IDecodeToken = (jwt.verify(token, 'testappsupersecretkey') as IDecodeToken);
+
+  if (!decodedToken) {
+    (req as any).isAuth = false;
+    return next();
+  }
+  (req as any).userId = decodedToken.userId;
+  (req as any).isAuth = true;
   next();
 };
 export default auth;
